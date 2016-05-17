@@ -8,7 +8,7 @@ function loaderFn(source) {
 	const name = options.name || utils.interpolateName(this, "[name]-[ext]", {});
 
 	return [
-		"var knockout = require('knockout');",
+		"var ko = require('knockout');",
 		"var stringTemplateEngine = require('knockout-template-loader/lib/string-template-engine');",
 		sourcePart,
 		`ko.templates['${name}'] = htmlContent;`

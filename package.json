@@ -1,6 +1,6 @@
 {
   "name": "knockout-template-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Knockout html template loader for webpack",
   "main": "lib/index.js",
   "author": "Archon Information Systems",
