@@ -45,7 +45,11 @@ engine.makeTemplateSource = function(template, doc) {
 };
 
 //make the templates accessible
-ko.templates = templates;
+if (ko.templates) {
+	Object.assign(ko.templates, templates);
+} else {
+	ko.templates = templates;
+}
 
 //make this new template engine our default engine
 ko.setTemplateEngine(engine);
