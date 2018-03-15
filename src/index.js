@@ -1,11 +1,11 @@
-import utils from "loader-utils";
+const utils = require("loader-utils");
 
 function loaderFn(source) {
 	this.cacheable();
 
 	const sourcePart = source.replace("module.exports", "var htmlContent");
-	const options = utils.getLoaderConfig(this, "knockoutTemplateLoader");
-	const name = options.name || utils.interpolateName(this, "[name]-[ext]", {});
+	const options = utils.getOptions(this);
+	const name = (options ? options.name : null) || utils.interpolateName(this, "[name]-[ext]", {});
 
 	return [
 		"var ko = require('knockout');",
