@@ -29,19 +29,27 @@ ko.utils.extend(ko.templateSources.stringTemplate.prototype, {
 	}
 });
 
-engine.makeTemplateSource = function(template, doc) {
-	var elem;
-	if(typeof template === "string") {
-		elem = (doc || document).getElementById(template);
+engine.makeTemplateSource = function(template, templateDocument) {
+  // Named template
+  if (typeof template == "string") {
+    templateDocument = templateDocument || document;
 
-		if(elem) {
-			return new ko.templateSources.domElement(elem);
-		}
+    var elem = templateDocument.getElementById(template);
+    if (elem) {
+      return new ko.templateSources.domElement(elem);
+    }
 
-		return new ko.templateSources.stringTemplate(template);
-	} else if(template && (template.nodeType == 1) || (template.nodeType == 8)) {
-		return new ko.templateSources.anonymousTemplate(template);
-	}
+    if (ko.templates[template]) {
+      return new ko.templateSources.stringTemplate(template);
+    }
+
+    throw new Error("Cannot find template with ID " + template);
+  } else if ((template.nodeType == 1) || (template.nodeType == 8)) {
+    // Anonymous template
+    return new ko.templateSources.anonymousTemplate(template);
+  } else {
+    throw new Error("Unknown template type: " + template);
+  }
 };
 
 //make the templates accessible
