@@ -5,7 +5,20 @@ function loaderFn(source) {
 
 	const sourcePart = source.replace("module.exports", "var htmlContent");
 	const options = utils.getOptions(this);
-	const name = (options ? options.name : null) || utils.interpolateName(this, "[name]-[ext]", {});
+  
+  let name = options && options.name || "[name]-[ext]";
+  
+  if (typeof name === "function") {
+    const pathObject = {
+      fullpath: utils.interpolateName(this, "[path][name].[ext]", {}),
+      path: utils.interpolateName(this, "[path]", {}),
+      name: utils.interpolateName(this, "[name]", {}),
+      ext: utils.interpolateName(this, "[ext]", {})
+    };
+    name = name(pathObject);
+  }
+
+	name = utils.interpolateName(this, name, {});
 
 	return [
 		"var ko = require('knockout');",
