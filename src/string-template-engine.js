@@ -10,6 +10,8 @@ ko.templateSources.stringTemplate = function(template) {
 	this.templateName = template;
 };
 
+ko.templateSources.stringTemplate.caseInsensitive = false;
+
 ko.utils.extend(ko.templateSources.stringTemplate.prototype, {
 	data: function(key, value) {
 		data[this.templateName] = data[this.templateName] || {};
@@ -21,7 +23,7 @@ ko.utils.extend(ko.templateSources.stringTemplate.prototype, {
 		data[this.templateName][key] = value;
 	},
 	text: function(value) {
-		if(arguments.length === 0) {
+	  if(arguments.length === 0) {
 			return templates[this.templateName];
 		}
 
@@ -39,8 +41,13 @@ engine.makeTemplateSource = function(template, templateDocument) {
       return new ko.templateSources.domElement(elem);
     }
 
-    if (ko.templates[template]) {
-      return new ko.templateSources.stringTemplate(template);
+    var templateName = template;
+    if (ko.templateSources.stringTemplate.caseInsensitive) {
+      templateName = templateName.toLowerCase();
+    }
+
+    if (ko.templates[templateName]) {
+      return new ko.templateSources.stringTemplate(templateName);
     }
 
     throw new Error("Cannot find template with ID " + template);
