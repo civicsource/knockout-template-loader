@@ -5,11 +5,25 @@ function loaderFn(source) {
 
 	const sourcePart = source.replace("module.exports", "var htmlContent");
 	const options = utils.getOptions(this);
-	const name = (options ? options.name : null) || utils.interpolateName(this, "[name]-[ext]", {});
+  
+  let name = options && options.name || "[name]-[ext]";
+  
+  if (typeof name === "function") {
+    name = name(utils.interpolateName(this, "[path][name].[ext]", {}));
+  }
+
+	name = utils.interpolateName(this, name, {});
+
+  const caseInsensitive = options && options.caseInsensitive;
+
+  if (caseInsensitive) {
+    name = name.toLowerCase();
+  }
 
 	return [
 		"var ko = require('knockout');",
-		"var stringTemplateEngine = require('knockout-template-loader/lib/string-template-engine');",
+		"require('knockout-template-loader/lib/string-template-engine');",
+    `ko.templateSources.stringTemplate.caseInsensitive = ${(caseInsensitive ? "true" : "false")};`,
 		sourcePart,
 		`ko.templates['${name}'] = htmlContent;`
 	].join("\n");
